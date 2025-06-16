@@ -1,58 +1,30 @@
-import { useEffect, useState } from "react";
-import "../styles/theme.css";
+
+import axios from 'axios'
+import { useEffect, useState } from 'react'
 
 export default function Home() {
-  const [news, setNews] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [articles, setArticles] = useState([])
 
   useEffect(() => {
-    fetch("/api/news")
-      .then((res) => res.json())
-      .then((data) => {
-        setNews(data.news || []);
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
-  }, []);
+    axios.get('/api/news').then(res => {
+      setArticles(res.data)
+    })
+  }, [])
 
   return (
     <div className="container">
-      <header>
-        <h1>Ada Derana Sinhala News</h1>
-        <p>
-          Source:{" "}
-          <a href="https://sinhala.adaderana.lk/" target="_blank" rel="noreferrer">
-            sinhala.adaderana.lk
+      <h1>උණුසුම් පුවත් - AdaDerana</h1>
+      {articles.map((article, i) => (
+        <div className="card" key={i}>
+          <a href={article.link} target="_blank" rel="noopener noreferrer">
+            <img src={article.image} alt="Thumbnail" />
+            <h2>{article.title}</h2>
           </a>
-        </p>
-      </header>
-
-      {loading ? (
-        <p>Loading news...</p>
-      ) : news.length === 0 ? (
-        <p>No news found.</p>
-      ) : (
-        <div className="news-grid">
-          {news.map(({ title, link, img }, i) => (
-            <a key={i} href={link} target="_blank" rel="noopener noreferrer" className="news-card">
-              <div className="image-wrapper">
-                {img ? (
-                  <img src={img} alt={title} loading="lazy" />
-                ) : (
-                  <div className="no-image">No Image</div>
-                )}
-              </div>
-              <h3>{title}</h3>
-            </a>
-          ))}
         </div>
-      )}
-
+      ))}
       <footer>
-        <p>
-          © Ada Derana | Scraped data used for educational/demo purposes only.
-        </p>
+        <p style={{fontSize: '0.8rem'}}>All news content © <a href="https://sinhala.adaderana.lk" target="_blank" rel="noreferrer">AdaDerana.lk</a>. This is a student-built project for educational purposes only.</p>
       </footer>
     </div>
-  );
-                            }
+  )
+}
