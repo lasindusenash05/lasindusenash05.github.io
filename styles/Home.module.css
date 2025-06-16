@@ -1,12 +1,10 @@
-body {
-  font-family: 'Noto Sans Sinhala', sans-serif;
-}
-
+/* styles/Home.module.css */
 .container {
   padding: 2rem;
   text-align: center;
 }
 
+/* Remove the invalid body block from here */
 .title {
   font-size: 2rem;
   margin-bottom: 1.5rem;
