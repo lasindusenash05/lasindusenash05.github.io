@@ -1,30 +1,40 @@
-
-import axios from 'axios'
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react';
+import Head from 'next/head';
+import styles from '../styles/Home.module.css';
 
 export default function Home() {
-  const [articles, setArticles] = useState([])
+  const [news, setNews] = useState([]);
 
   useEffect(() => {
-    axios.get('/api/news').then(res => {
-      setArticles(res.data)
-    })
-  }, [])
+    fetch('/api/news')
+      .then((res) => res.json())
+      .then((data) => setNews(data))
+      .catch(console.error);
+  }, []);
 
   return (
-    <div className="container">
-      <h1>උණුසුම් පුවත් - AdaDerana</h1>
-      {articles.map((article, i) => (
-        <div className="card" key={i}>
-          <a href={article.link} target="_blank" rel="noopener noreferrer">
-            <img src={article.image} alt="Thumbnail" />
-            <h2>{article.title}</h2>
-          </a>
+    <div className={styles.container}>
+      <Head>
+        <title>Hiru Sinhala News</title>
+        <meta name="description" content="Live scraped Hiru news headlines" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+
+      <main>
+        <h1 className={styles.title}>📢 Hiru News (සිංහල)</h1>
+        <div className={styles.grid}>
+          {news.map((item, index) => (
+            <a href={item.link} className={styles.card} key={index} target="_blank" rel="noreferrer">
+              <img src={item.image} alt="news" className={styles.img} />
+              <h3>{item.title}</h3>
+            </a>
+          ))}
         </div>
-      ))}
-      <footer>
-        <p style={{fontSize: '0.8rem'}}>All news content © <a href="https://sinhala.adaderana.lk" target="_blank" rel="noreferrer">AdaDerana.lk</a>. This is a student-built project for educational purposes only.</p>
+      </main>
+
+      <footer className={styles.footer}>
+        © All rights belong to <a href="https://www.hirunews.lk/">Hiru News</a>. This is a non-commercial project.
       </footer>
     </div>
-  )
+  );
 }
